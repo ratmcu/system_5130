@@ -48,6 +48,7 @@ if __name__ == '__main__':
         if section == 'system':
            chunk_size = configparser['system'].getint('chunk_size', 15) 
            sample_skip = configparser['system'].getint('sample_skip', 5) 
+        ## add the devices to the dictonary
         if section == 'radar{0}'.format(i):
             try:
                 port = configparser['radar{0}'.format(i)]['port']
@@ -58,13 +59,14 @@ if __name__ == '__main__':
             # radar = XethruRadar(i, port, fs)
             radar = XethruRadarDummy(i, port, fs)
             plate = collections.deque(maxlen=int(chunk_size*fs))
-            radar_entry = {'name': section, 'process': radar, 'queue': radar.radarDataQ, 'event': radar.radarStopEvent, 'plate':plate} 
+            radar_entry = {'name': section, 'fs': fs, 'process': radar, 'queue': radar.radarDataQ, 'event': radar.radarStopEvent, 'plate':plate} 
             radar_signals.append(radar.radarStopEvent)
             radar_list.append(radar_entry)
             # radar.start()
     
     atexit.register(exit_handler, radar_signals)  
     split_time = time.time()
+    chunk_queue = mp.Queue()
     while(1):             
     # loop
         # pop from each queue and add to the current chunk(eg 15s long deque)  probably with a label? then remove the gap of arbitarary old elemnts
@@ -73,4 +75,8 @@ if __name__ == '__main__':
         for device_type in devices.keys():
             for entry in devices[device_type]:  # get from queue and add to the plate
                 logging.getLogger('system').debug(f'taking data from {entry["name"]}')
-                entry['plate'].append(plate['queue'].get())        
+                entry['plate'].append(plate['queue'].get())
+        if(time.time()-split_time):
+            split_time = time.time()
+
+
