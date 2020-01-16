@@ -1,0 +1,49 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "msvc build client",
+        "type": "shell",
+        "command": "cl.exe",
+        "args": ["/EHsc", "/Zi", "/Fe:", "client.exe", "client.cpp"],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "presentation": {
+          "reveal": "always"
+        },
+        "problemMatcher": "$msCompile"
+      }
+      ,
+      {
+        "label": "msvc build server",
+        "type": "shell",
+        "command": "cl.exe",
+        "args": ["/EHsc", "/Zi", "/Fe:", "server.exe", "server.cpp"],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "presentation": {
+          "reveal": "always"
+        },
+        "problemMatcher": "$msCompile"
+      }
+      ,
+      {
+        "label": "msvc build thread",
+        "type": "shell",
+        "command": "cl.exe",
+        "args": ["/EHsc", "/Zi", "/Fe:", "thread.exe", "thread.cpp"],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "presentation": {
+          "reveal": "always"
+        },
+        "problemMatcher": "$msCompile"
+      }
+    ]
+  }

@@ -1,6 +1,10 @@
 import time
 import threading
 import multiprocessing as mp
+from numpy import genfromtxt
+import pandas as pd
+import numpy as np
+
 # from radar.radarHandlerMP import CollectionThreadX4MP
 
 # def getConfig(configparser):
@@ -39,10 +43,10 @@ class XethruRadar():
     def __init__(self, number, port, frequency):
         self.radar_fs = frequency
         self.createRadarSettingsDict('x4')        
-        self.radarDataQMP = mp.Queue()
-        self.radarStopEventMP = mp.Event()
+        self.dataQ = mp.Queue()
+        self.stopEvent = mp.Event()
         self.radarThread = CollectionThreadX4MP('radarThreadX4_{0}'.format(number), self.radarStopEventMP, self.radarSettings, 
-                                                baseband=True, fs = self.radar_fs, dataQueue=self.radarDataQMP, radarPort=port)
+                                                baseband=True, fs = self.radar_fs, dataQueue=self.dataQ, radarPort=port)
 
     def createRadarSettingsDict(self, moduleName):
         self.radarSettings = {}
@@ -69,27 +73,48 @@ class XethruRadar():
             self.radarSettings['RadarType'] = 'X4'
 
 class XethruRadarDummy(mp.Process):
-    def __init__(self, number, port, frequency ):
+    def __init__(self, number, port, frequency , file = None):
         mp.Process.__init__(self)  
         self.fs = frequency
         self.radarDataQ = mp.Queue()
-        self.radarStopEvent = mp.Event()
-        self.exit = mp.Event()
+        self.stopEvent = mp.Event()
         self.number = number
+        self.file = file
     def run(self):
         print ('Initializing dummy radar {0}'.format(self.number))
         print ('Started radar data collection')
         oldTime = time.time()
         currentTime = time.time()
-        while not self.exit.is_set():
-            if (currentTime - oldTime) < 1.0/self.fs:
-                continue
-            currentTime = time.time()
-            radarFrame = complexes = [ complex(i, i) for i in range(188) ] 
-            self.radarDataQ.put([currentTime, radarFrame])
+        if self.file: 
+            csv_np =  genfromtxt(self.file, dtype=complex, delimiter=',')                
+            while not self.stopEvent.is_set():
+                for row in csv_np:
+                    while (currentTime - oldTime) < (1.0/self.fs): #TODO: find a better
+                        currentTime = time.time()
+                    oldTime = time.time()
+                        # currentTime = time.time()
+                    time_stamp = row[0]
+                    real = []
+                    imag = []
+                    for col in row[1:]:
+                        real.append(col.real)
+                        imag.append(col.imag)
+                    # print(real)
+                    real.extend(imag)
+                    self.radarDataQ.put([currentTime, real])
+                # oldTime = time.time()
+                    
+        else:
+            while not self.stopEvent.is_set():
+                if (currentTime - oldTime) > (1.0/self.fs):
+                    oldTime = time.time()
+                    currentTime = time.time()
+                    radarFrame = [ complex(i, i) for i in range(180) ] 
+                    self.radarDataQ.put([currentTime, radarFrame])
+                currentTime = time.time()
+                # else:            
         print('radar stopped')
-        
-            
+ 
     def shutdown(self):
         print ("Shutdown of radar process initiated")
-        self.exit.set()
+        self.stopEvent.set()
