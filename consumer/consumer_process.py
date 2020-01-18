@@ -7,7 +7,6 @@ from codes.kinect_utility import getChestDistanceFromRadars, activityDetection
 from codes.algorithm_utility import getAlgoList
 import numpy as np
 from codes.radar_conversion import radarToNp, framesToNp, toRawRadarFrame
-import pprint
 
 class ConsumerMP(mp.Process):
     def __init__(self):
@@ -19,7 +18,7 @@ class ConsumerMP(mp.Process):
         while not self.stopEvent.is_set():
             if not self.chunkQ.empty():
                 chunk = self.chunkQ.get()
-                print(chunk.keys())
+                # print(chunk.keys())
                 print(f"started at {time.strftime('%X')}")
                 # create data into two lists based on person id
                 try:
@@ -33,11 +32,11 @@ class ConsumerMP(mp.Process):
                     raise BaseException('chunk doesn\'t contain \'radar\' data' )
                 
                 skeleton_data = {}
-                print(f"kinect_data: {kinect_data}")  
+                # print(f"kinect_data: {kinect_data}")  
                 for kinect in kinect_data.keys():
-                    print(kinect_data[kinect])
+                    # print(kinect_data[kinect])
                     for skeleton_list in kinect_data[kinect]:
-                        print(skeleton_list)
+                        # print(skeleton_list)
                         for skeleton in skeleton_list[1]:
                             if 'person{0}'.format(skeleton[0]) in skeleton_data:
                                 skeleton_data['person{0}'.format(skeleton[0])].append(skeleton[1:])
