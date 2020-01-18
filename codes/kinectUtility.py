@@ -32,6 +32,7 @@ def getChestDistanceFromRadars(joint_list):
 def activityDetection(input_bloc):
     blc_std=np.std(input_bloc*1/1000, axis=0,dtype=np.float64,ddof=1)
     blc_std=blc_std.reshape(3,1)
+    th = 0.65
     if blc_std[0][0]<th and blc_std[1][0]<th and blc_std[2][0]<th:
         det_activity=1
     else:

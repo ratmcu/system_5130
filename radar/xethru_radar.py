@@ -4,8 +4,7 @@ import multiprocessing as mp
 from numpy import genfromtxt
 import pandas as pd
 import numpy as np
-
-# from radar.radarHandlerMP import CollectionThreadX4MP
+from radar.radarHandlerMP import CollectionThreadX4MP
 
 # def getConfig(configparser):
 #         configparser = configparser.ConfigParser()
@@ -45,9 +44,11 @@ class XethruRadar():
         self.createRadarSettingsDict('x4')        
         self.dataQ = mp.Queue()
         self.stopEvent = mp.Event()
-        self.radarThread = CollectionThreadX4MP('radarThreadX4_{0}'.format(number), self.radarStopEventMP, self.radarSettings, 
+        self.radarThread = CollectionThreadX4MP('radarThreadX4_{0}'.format(number), self.stopEvent, self.radarSettings, 
                                                 baseband=True, fs = self.radar_fs, dataQueue=self.dataQ, radarPort=port)
-
+    def start(self):
+        self.radarThread.start()
+        
     def createRadarSettingsDict(self, moduleName):
         self.radarSettings = {}
         if moduleName == 'x2':

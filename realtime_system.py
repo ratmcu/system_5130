@@ -67,14 +67,14 @@ if __name__ == '__main__':
                     radar = XethruRadar(i, port, fs)
                 plate = collections.deque(maxlen=int(chunk_size*fs))
                 radar_entry = {'name': section, 'fs': fs, 'process': radar,
-                            'queue': radar.radarDataQ, 'event': radar.stopEvent, 
+                            'queue': radar.dataQ, 'event': radar.stopEvent, 
                             'plate': plate} 
                 exit_signals.append(radar.stopEvent)
                 radar_list.append(radar_entry)
 
             if section == 'kinect{0}'.format(i):
                 try:
-                    port = configparser['kinect{0}'.format(i)]['port']
+                    port = configparser['kinect{0}'.format(i)].getint('port', 27012)
                     fs = configparser['kinect{0}'.format(i)].getfloat('fs', 1.0)
                 except KeyError as e:
                     raise Exception('incomplete config.ini config file \
@@ -109,11 +109,12 @@ if __name__ == '__main__':
     consumer = ConsumerMP()
     exit_signals.append(consumer.stopEvent)
     consumer.start()
-    # atexit.register(exit_handler, exit_signals)  
+    atexit.register(exit_handler, exit_signals)  
     
-    try:
-        split_time = time.time()
-        while(1):             
+    
+    split_time = time.time()
+    while(1):  
+        try:           
         # loop
             # pop from each queue and add to the current chunk(eg 15s long deque)  
             # probably with a label? then remove the gap of arbitarary old elemnts
@@ -135,5 +136,5 @@ if __name__ == '__main__':
                         entry['plate'].clear()                      # clear the whole plate,
                         # TODO: only the unwanted last frames has to be cleared 
                 consumer.chunkQ.put(chunk_dict)
-    except :
-        sys.exit(1)
+        except :
+            sys.exit(1)

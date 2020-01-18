@@ -38,6 +38,8 @@
 
 import socket
 import sys
+import time
+import ast
 
 HOST = ''    # The remote host
 PORT = 27014              # The same port as used by the server
@@ -65,16 +67,22 @@ for res in socket.getaddrinfo(HOST, PORT, 0, 0, socket.IPPROTO_UDP):
 PORT = 27014              # The same port as used by the server
 s = None
 s = socket.socket(2, 2, 0)
-s.bind(("10.192.37.133", PORT))
+# s.bind(("10.192.37.133", PORT))
+s.bind(("127.0.0.1", PORT))
 print('opened socket')
 s.settimeout(10.0)
 data = s.recv(1024)
-s.setblocking(True)
+# s.setblocking(True)
+s.settimeout(10.0)
 
 while True:
-    try:
-        data = s.recv(1024)
-        print('Received', str(data.decode("utf-8", errors='ignore')).split('\0')[0])
-    except KeyboardInterrupt:
-        sys.exit(1)
+    # try:
+    data = s.recv(1024)
+    stri = str(data.decode('utf-8', errors='ignore')).split('\0')[0]
+    # print(f"Received: {stri} at {time.time()}")
+    coord_list = ast.literal_eval(stri)
+    print(f"{coord_list}")
+    # time.sleep(1)
+    # except KeyboardInterrupt:
+        # sys.exit(1)
 s.close()

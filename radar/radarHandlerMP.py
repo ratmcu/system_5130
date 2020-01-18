@@ -14,7 +14,6 @@ import queue
 import copy
 from io import open
 import multiprocessing
- 
 # end of the threading based radar thread class
 
 class CollectionThreadX4MP(multiprocessing.Process):

@@ -80,12 +80,8 @@ def emdBreathingRate(data):
         
     return(br_rate)    
 
-
-
 def getAlgoList():
     algo_list = [{'name':'emd', 'function' : emdBreathingRate},
                  {'name': 'welch fft', 'function' : welchBreathingRate}  
                 ]
     return algo_list
-
-
