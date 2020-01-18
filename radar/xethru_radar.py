@@ -4,7 +4,7 @@ import multiprocessing as mp
 from numpy import genfromtxt
 import pandas as pd
 import numpy as np
-from radar.radarHandlerMP import CollectionThreadX4MP
+from radar.radar_handler_mp import CollectionThreadX4MP
 
 # def getConfig(configparser):
 #         configparser = configparser.ConfigParser()
