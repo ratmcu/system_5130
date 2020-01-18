@@ -37,7 +37,7 @@ class CollectionThreadX4MP(multiprocessing.Process):
         while self.radarObject.peek_message_data_float():
             self.radarObject.read_message_data_float()
         # Set DAC range
-        time.sleep(3)
+        # time.sleep(3)
         self.radarObject.x4driver_set_dac_min(self.radarSettings['DACMin'])
         self.radarObject.x4driver_set_dac_max(self.radarSettings['DACMax'])
 
@@ -80,5 +80,4 @@ class CollectionThreadX4MP(multiprocessing.Process):
             
     def shutdown(self):
         print ("Shutdown of radar process initiated")
-        
-        #self.exit.set()
+        self.exit.set()
