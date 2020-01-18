@@ -3,8 +3,8 @@ import time
 import sys
 sys.path.append('..')
 from codes.bin_finder import binIndex, denoiseRadar
-from codes.kinectUtility import getChestDistanceFromRadars, activityDetection
-from codes.algorithmUtility import getAlgoList
+from codes.kinect_utility import getChestDistanceFromRadars, activityDetection
+from codes.algorithm_utility import getAlgoList
 import numpy as np
 from codes.radar_conversion import radarToNp, framesToNp, toRawRadarFrame
 import pprint
