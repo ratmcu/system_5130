@@ -1,5 +1,7 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
+//  
+// created on Jan 10th 2020
+// @author: Rajitha Hathurusinghe 
+// 
 
 #include <assert.h>
 #include <stdbool.h>

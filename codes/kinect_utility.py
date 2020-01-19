@@ -1,8 +1,12 @@
+'''
+created on Jan 10th 2020
+@author: Rajitha Hathurusinghe 
+'''
 import numpy as np
 from numpy import linalg as LA
 
 
-def getChestDistanceFromRadars(joint_list):
+def getChestDistanceFromRadars(joint_list): #TODO getting coordinates from a config
     rd1=np.array([0, -2.08, 0]) #Radar-1 coordinate
     rd1=np.transpose(rd1)
     rd1=rd1.reshape(3,1)

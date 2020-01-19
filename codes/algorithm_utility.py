@@ -1,4 +1,8 @@
-#!/usr/bin/env python3
+'''
+created on Jan 10th 2020
+@author: Rajitha Hathurusinghe 
+'''
+
 # gives out the algorithm dictinary list
 # and defines the functions executing the breathing algorithms
 
@@ -7,7 +11,7 @@
 """
 Created on Fri Jan 10 14:40:28 2020
 
-@author: rnd
+@author: Varun
 """
 import numpy as np
 from scipy import signal
